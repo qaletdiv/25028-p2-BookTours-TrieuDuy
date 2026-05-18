@@ -1,0 +1,20 @@
+export const img = {
+  beach1: "/images/tours/beach1.jpg",
+  beach2: "/images/tours/beach2.jpg",
+  beach3: "/images/tours/beach3.jpg",
+  mountain1: "/images/tours/mountain1.jpg",
+  mountain2: "/images/tours/mountain2.jpg",
+  city1: "/images/tours/city1.jpg",
+  city2: "/images/tours/city2.jpg",
+  bay1: "/images/tours/bay1.jpg",
+  island1: "/images/tours/island1.jpg",
+  road1: "/images/tours/road1.jpg",
+  nature1: "/images/tours/nature1.jpg",
+  travel1: "/images/tours/travel1.jpg",
+};
+
+export const banners = {
+  b1: "/images/banners/banner1.jpg",
+  b2: "/images/banners/banner2.jpg",
+  b3: "/images/banners/banner3.jpg",
+};

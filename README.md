@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# TravelVN - Hệ Thống Đặt Tour Du Lịch
 
-## Getting Started
+Website đặt tour du lịch phía người dùng, xây dựng bằng **React + Next.js** (frontend only).
 
-First, run the development server:
+## Công nghệ
+
+- Next.js 16 (App Router)
+- React 19
+- Tailwind CSS 4
+- localStorage (mô phỏng đăng ký, đăng nhập, booking)
+
+## Chức năng
+
+| Màn hình | Route | Mô tả |
+|----------|-------|-------|
+| Trang chủ | `/` | Banner slide, bộ lọc tìm kiếm, tour nổi bật, pop-up khuyến mãi |
+| Danh sách tour | `/tours` | Lọc, sắp xếp, phân trang |
+| Chi tiết tour | `/tours/[id]` | Tab lịch trình/giá/chính sách, đặt ngay |
+| Đăng ký | `/register` | Form đăng ký + validation |
+| Đăng nhập | `/login` | Xác thực mock qua localStorage |
+| Thanh toán | `/checkout` | Yêu cầu đăng nhập, form booking |
+| Xác nhận | `/confirmation` | Tóm tắt booking thành công |
+| Tài khoản | `/account` | Thông tin cá nhân + lịch sử booking |
+| Liên hệ | `/contact` | Form liên hệ (mô phỏng) |
+
+## Cài đặt & chạy
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Mở [http://localhost:3000](http://localhost:3000)
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+## Luồng demo
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Duyệt tour trên trang chủ hoặc `/tours`
+2. Xem chi tiết tour → nhấn **Đặt ngay**
+3. Đăng ký tài khoản mới (hoặc đăng nhập nếu đã có)
+4. Điền form thanh toán → **Hoàn tất đặt tour**
+5. Xem xác nhận booking và lịch sử tại **Tài khoản của tôi**
 
-## Learn More
+## Lưu ý
 
-To learn more about Next.js, take a look at the following resources:
+- Không có backend/database thật — dữ liệu lưu trong **localStorage** trình duyệt
+- Thanh toán chỉ **mô phỏng**, không kết nối cổng thanh toán
+- Ảnh tour lấy từ Unsplash (cần internet khi xem)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Cấu trúc thư mục
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+app/           → Các trang (Next.js App Router)
+components/    → UI components tái sử dụng
+context/       → Auth & Cart (React Context)
+data/          → Mock data tours
+lib/           → Helpers, validation, storage
+```
