@@ -11,6 +11,16 @@ export const img = {
   road1: "/images/tours/road1.jpg",
   nature1: "/images/tours/nature1.jpg",
   travel1: "/images/tours/travel1.jpg",
+  bangkok: "/images/tours/bangkok.jpg",
+  singapore: "/images/tours/singapore.jpg",
+  tokyo: "/images/tours/tokyo.jpg",
+  seoul: "/images/tours/seoul.jpg",
+  thailand: "/images/tours/thailand.jpg",
+  danang: "/images/tours/danang.jpg",
+  mekong: "/images/tours/mekong.jpg",
+  dalat: "/images/tours/dalat.jpg",
+  nhatrang: "/images/tours/nhatrang.jpg",
+  paris: "/images/tours/city2.jpg",
 };
 
 export const banners = {
