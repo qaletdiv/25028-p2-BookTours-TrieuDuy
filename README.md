@@ -46,12 +46,3 @@ Mở [http://localhost:3000](http://localhost:3000)
 - Thanh toán chỉ **mô phỏng**, không kết nối cổng thanh toán
 - Ảnh tour lấy từ Unsplash (cần internet khi xem)
 
-## Cấu trúc thư mục
-
-```
-app/           → Các trang (Next.js App Router)
-components/    → UI components tái sử dụng
-context/       → Auth & Cart (React Context)
-data/          → Mock data tours
-lib/           → Helpers, validation, storage
-```
