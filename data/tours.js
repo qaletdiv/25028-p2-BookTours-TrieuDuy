@@ -13,6 +13,23 @@ export const destinations = [
   "Seoul",
   "Bali",
   "Paris",
+  "Hồng Kông",
+  "Đài Bắc",
+  "Quy Nhơn",
+  "Ninh Bình",
+  "Malaysia",
+  "Côn Đảo",
+  "Mộc Châu",
+  "Buôn Ma Thuột",
+  "Hà Giang",
+  "Phan Rang",
+  "Lý Sơn",
+  "Pattaya",
+  "Osaka",
+  "Busan",
+  "Zurich",
+  "Rome",
+  "Sydney",
 ];
 
 export const departurePoints = [
@@ -486,7 +503,204 @@ export const tours = [
     excluded: ["Đồ uống có cồn", "Dịch vụ đặc biệt"],
     policy: "Đặt cọc 70% cho tour cao cấp.",
   },
+  {
+    id: "T016",
+    name: "Hồng Kông Disneyland 4N3Đ",
+    code: "T016",
+    category: "international",
+    featured: ["international"],
+    destination: "Hồng Kông",
+    departure: "TP.HCM",
+    duration: 4,
+    price: 16990000,
+    childPrice: 13990000,
+    type: "explore",
+    rating: 4.8,
+    seatsLeft: 12,
+    images: [img.city1, img.road1],
+    summary: "TP.HCM - Hồng Kông",
+    description: "Khám phá Victoria Harbour, Disneyland và thiên đường mua sắm Mong Kok.",
+    departureDates: ["2026-06-09", "2026-06-23", "2026-07-07"],
+    itinerary: [
+      { day: 1, title: "Đến Hồng Kông", content: "Nhận phòng, dạo Tsim Sha Tsui, ngắm Symphony of Lights." },
+      { day: 2, title: "Disneyland", content: "Trải nghiệm Disney cả ngày." },
+      { day: 3, title: "City tour", content: "Victoria Peak, chợ Lady Market." },
+      { day: 4, title: "Về Việt Nam", content: "Tự do mua sắm, ra sân bay." },
+    ],
+    included: ["Vé máy bay", "Khách sạn 4 sao", "Vé Disneyland", "HDV"],
+    excluded: ["Ăn trưa", "Tip HDV"],
+    policy: "Yêu cầu hộ chiếu còn hạn 6 tháng.",
+  },
+  {
+    id: "T017",
+    name: "Đài Bắc - Đài Trung 5N4Đ",
+    code: "T017",
+    category: "international",
+    featured: ["international"],
+    destination: "Đài Bắc",
+    departure: "TP.HCM",
+    duration: 5,
+    price: 14990000,
+    childPrice: 12490000,
+    type: "explore",
+    rating: 4.7,
+    seatsLeft: 10,
+    images: [img.seoul, img.city1],
+    summary: "TP.HCM - Đài Bắc",
+    description: "Tháp Taipei 101, làng cổ Cửu Phần và hồ Nhật Nguyệt thơ mộng.",
+    departureDates: ["2026-06-06", "2026-06-20", "2026-07-04"],
+    itinerary: [
+      { day: 1, title: "Bay Đài Bắc", content: "Nhận phòng, đi chợ đêm Ximending." },
+      { day: 2, title: "City tour", content: "Taipei 101, đài tưởng niệm Tưởng Giới Thạch." },
+      { day: 3, title: "Cửu Phần", content: "Tham quan Shifen, thả đèn trời." },
+      { day: 4, title: "Đài Trung", content: "Hồ Nhật Nguyệt, làng Cầu Vồng." },
+      { day: 5, title: "Về Việt Nam", content: "Mua sắm, bay về." },
+    ],
+    included: ["Vé máy bay", "Khách sạn 4 sao", "Xe tham quan", "HDV"],
+    excluded: ["Tip", "Chi phí cá nhân"],
+    policy: "Visa theo chính sách hiện hành.",
+  },
+  {
+    id: "T018",
+    name: "Quy Nhơn - Phú Yên 3N2Đ",
+    code: "T018",
+    category: "domestic",
+    featured: ["domestic"],
+    destination: "Quy Nhơn",
+    departure: "TP.HCM",
+    duration: 3,
+    price: 3890000,
+    childPrice: 3090000,
+    type: "explore",
+    rating: 4.7,
+    seatsLeft: 18,
+    images: [img.beach2, img.nhatrang, img.beach1],
+    summary: "TP.HCM - Quy Nhơn - Phú Yên",
+    description: "Eo Gió, Kỳ Co, Gành Đá Đĩa và khung cảnh biển miền Trung tuyệt đẹp.",
+    departureDates: ["2026-06-01", "2026-06-15", "2026-06-29"],
+    itinerary: [
+      { day: 1, title: "Đến Quy Nhơn", content: "Nhận phòng, dạo biển Quy Nhơn." },
+      { day: 2, title: "Eo Gió - Kỳ Co", content: "Tham quan Eo Gió, tắm biển Kỳ Co." },
+      { day: 3, title: "Phú Yên - TP.HCM", content: "Gành Đá Đĩa, nhà thờ Mằng Lăng, về TP.HCM." },
+    ],
+    included: ["Vé máy bay", "Khách sạn 3 sao", "Xe tham quan", "HDV"],
+    excluded: ["Ăn tối", "Chi phí cá nhân"],
+    policy: "Hủy trước 5 ngày hoàn 50%.",
+  },
+  {
+    id: "T019",
+    name: "Ninh Bình Tràng An 2N1Đ",
+    code: "T019",
+    category: "domestic",
+    featured: ["domestic"],
+    destination: "Ninh Bình",
+    departure: "Hà Nội",
+    duration: 2,
+    price: 2290000,
+    childPrice: 1790000,
+    type: "explore",
+    rating: 4.6,
+    seatsLeft: 20,
+    images: [img.bay1, img.mountain2],
+    summary: "Hà Nội - Ninh Bình",
+    description: "Du thuyền Tràng An, Hang Múa và chùa Bái Đính trong hành trình ngắn ngày.",
+    departureDates: ["2026-05-30", "2026-06-06", "2026-06-13"],
+    itinerary: [
+      { day: 1, title: "Hà Nội - Ninh Bình", content: "Tràng An, Hang Múa, nghỉ đêm Ninh Bình." },
+      { day: 2, title: "Bái Đính - Hà Nội", content: "Tham quan chùa Bái Đính, về Hà Nội." },
+    ],
+    included: ["Xe đưa đón", "Khách sạn 3 sao", "Vé tham quan", "HDV"],
+    excluded: ["Đồ uống", "Tip"],
+    policy: "Tour cuối tuần cần đặt sớm.",
+  },
+  {
+    id: "T020",
+    name: "Kuala Lumpur - Genting 4N3Đ",
+    code: "T020",
+    category: "international",
+    featured: ["international"],
+    destination: "Malaysia",
+    departure: "TP.HCM",
+    duration: 4,
+    price: 11990000,
+    childPrice: 9690000,
+    type: "explore",
+    rating: 4.7,
+    seatsLeft: 13,
+    images: [img.city2, img.bangkok],
+    summary: "TP.HCM - Kuala Lumpur",
+    description: "Tháp đôi Petronas, động Batu và cao nguyên Genting mát mẻ.",
+    departureDates: ["2026-06-12", "2026-06-26", "2026-07-10"],
+    itinerary: [
+      { day: 1, title: "Đến Kuala Lumpur", content: "Nhận phòng, tham quan quảng trường Merdeka." },
+      { day: 2, title: "City tour", content: "Tháp đôi Petronas, động Batu." },
+      { day: 3, title: "Genting", content: "Di chuyển Genting, vui chơi tự do." },
+      { day: 4, title: "Về Việt Nam", content: "Mua sắm, bay về TP.HCM." },
+    ],
+    included: ["Vé máy bay", "Khách sạn 4 sao", "Xe tham quan", "HDV"],
+    excluded: ["Ăn trưa", "Tip HDV"],
+    policy: "Cần hộ chiếu còn hạn 6 tháng.",
+  },
 ];
+
+const expandedTourSeeds = [
+  { destination: "Côn Đảo", departure: "TP.HCM", category: "domestic", type: "resort", duration: 3, basePrice: 5590000, summary: "TP.HCM - Côn Đảo", imageSet: [img.beach1, img.island1, img.beach3] },
+  { destination: "Mộc Châu", departure: "Hà Nội", category: "domestic", type: "explore", duration: 3, basePrice: 2890000, summary: "Hà Nội - Mộc Châu", imageSet: [img.mountain1, img.nature1, img.road1] },
+  { destination: "Buôn Ma Thuột", departure: "TP.HCM", category: "domestic", type: "adventure", duration: 3, basePrice: 3290000, summary: "TP.HCM - Buôn Ma Thuột", imageSet: [img.nature1, img.mountain2, img.road1] },
+  { destination: "Hà Giang", departure: "Hà Nội", category: "domestic", type: "adventure", duration: 4, basePrice: 4290000, summary: "Hà Nội - Hà Giang", imageSet: [img.mountain2, img.road1, img.nature1] },
+  { destination: "Phan Rang", departure: "TP.HCM", category: "domestic", type: "explore", duration: 3, basePrice: 3090000, summary: "TP.HCM - Phan Rang", imageSet: [img.beach2, img.beach1, img.nhatrang] },
+  { destination: "Lý Sơn", departure: "Đà Nẵng", category: "domestic", type: "explore", duration: 3, basePrice: 3690000, summary: "Đà Nẵng - Lý Sơn", imageSet: [img.island1, img.beach2, img.beach3] },
+  { destination: "Pattaya", departure: "TP.HCM", category: "international", type: "resort", duration: 5, basePrice: 9990000, summary: "TP.HCM - Pattaya", imageSet: [img.thailand, img.bangkok, img.beach2] },
+  { destination: "Osaka", departure: "TP.HCM", category: "international", type: "explore", duration: 6, basePrice: 26990000, summary: "TP.HCM - Osaka", imageSet: [img.tokyo, img.city1, img.road1] },
+  { destination: "Busan", departure: "TP.HCM", category: "international", type: "resort", duration: 5, basePrice: 16990000, summary: "TP.HCM - Busan", imageSet: [img.seoul, img.beach3, img.city1] },
+  { destination: "Zurich", departure: "TP.HCM", category: "international", type: "explore", duration: 7, basePrice: 46990000, summary: "TP.HCM - Zurich", imageSet: [img.paris, img.mountain2, img.road1] },
+  { destination: "Rome", departure: "TP.HCM", category: "international", type: "explore", duration: 7, basePrice: 43990000, summary: "TP.HCM - Rome", imageSet: [img.city2, img.road1, img.nature1] },
+  { destination: "Sydney", departure: "TP.HCM", category: "international", type: "explore", duration: 6, basePrice: 32990000, summary: "TP.HCM - Sydney", imageSet: [img.city1, img.beach1, img.road1] },
+];
+
+const makeDepartureDates = (index) => {
+  const month = (index % 6) + 5;
+  const d1 = String((index * 2 + 3) % 26 + 1).padStart(2, "0");
+  const d2 = String((index * 2 + 10) % 26 + 1).padStart(2, "0");
+  const d3 = String((index * 2 + 17) % 26 + 1).padStart(2, "0");
+  return [`2026-${String(month).padStart(2, "0")}-${d1}`, `2026-${String(month).padStart(2, "0")}-${d2}`, `2026-${String(month).padStart(2, "0")}-${d3}`];
+};
+
+const expandedTours = expandedTourSeeds.map((seed, idx) => {
+  const codeNum = 21 + idx;
+  const id = `T${String(codeNum).padStart(3, "0")}`;
+  const nights = Math.max(seed.duration - 1, 1);
+  const featured = seed.category === "domestic" ? ["domestic"] : ["international"];
+  return {
+    id,
+    name: `${seed.destination} ${seed.duration}N${nights}Đ`,
+    code: id,
+    category: seed.category,
+    featured,
+    destination: seed.destination,
+    departure: seed.departure,
+    duration: seed.duration,
+    price: seed.basePrice,
+    childPrice: Math.round(seed.basePrice * 0.8),
+    type: seed.type,
+    rating: Number((4.6 + (idx % 5) * 0.1).toFixed(1)),
+    seatsLeft: 8 + (idx % 12),
+    images: seed.imageSet,
+    summary: seed.summary,
+    description: `Hành trình ${seed.summary} với lịch trình tối ưu, nhiều trải nghiệm đặc trưng địa phương và dịch vụ trọn gói.`,
+    departureDates: makeDepartureDates(idx),
+    itinerary: [
+      { day: 1, title: `${seed.departure} - ${seed.destination}`, content: "Đón khách, khởi hành và tham quan điểm nổi bật đầu tiên." },
+      { day: 2, title: `Khám phá ${seed.destination}`, content: "Tham quan theo chương trình, trải nghiệm ẩm thực và văn hóa địa phương." },
+      { day: seed.duration, title: `${seed.destination} - ${seed.departure}`, content: "Mua sắm đặc sản, kết thúc chương trình và trở về." },
+    ],
+    included: ["Vé di chuyển theo chương trình", "Khách sạn tiêu chuẩn 3-4 sao", "HDV", "Bảo hiểm du lịch"],
+    excluded: ["Chi phí cá nhân", "Ăn uống ngoài chương trình", "Tip"],
+    policy: "Hủy trước 7 ngày hoàn 50%. Điều kiện cụ thể theo từng đợt khởi hành.",
+  };
+});
+
+tours.push(...expandedTours);
 
 export function getTourById(id) {
   return tours.find((t) => t.id === id);
@@ -497,6 +711,7 @@ export function getRelatedTours(tour, limit = 4) {
     .filter(
       (t) =>
         t.id !== tour.id &&
+        t.category === tour.category &&
         (t.destination === tour.destination || t.type === tour.type)
     )
     .slice(0, limit);

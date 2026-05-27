@@ -45,4 +45,3 @@ Mở [http://localhost:3000](http://localhost:3000)
 - Không có backend/database thật — dữ liệu lưu trong **localStorage** trình duyệt
 - Thanh toán chỉ **mô phỏng**, không kết nối cổng thanh toán
 - Ảnh tour lấy từ Unsplash (cần internet khi xem)
-

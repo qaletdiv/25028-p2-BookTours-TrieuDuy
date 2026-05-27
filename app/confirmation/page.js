@@ -1,17 +1,41 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import { getLastBooking } from "@/lib/storage";
+import { getBookings, getLastBooking } from "@/lib/storage";
 import { formatDate, formatPrice } from "@/data/tours";
+import { useCart } from "@/context/CartContext";
 import Button from "@/components/ui/Button";
 
 export default function ConfirmationPage() {
   const [booking, setBooking] = useState(null);
+  const [ready, setReady] = useState(false);
+  const { clearCart } = useCart();
 
   useEffect(() => {
-    setBooking(getLastBooking());
-  }, []);
+    clearCart();
+
+    const last = getLastBooking();
+    if (last) {
+      setBooking(last);
+      setReady(true);
+      return;
+    }
+
+    // Fallback an toan: neu localStorage last booking bi mat thi lay booking moi nhat.
+    const bookings = getBookings();
+    if (bookings.length > 0) {
+      setBooking(bookings[0]);
+    }
+    setReady(true);
+  }, [clearCart]);
+
+  if (!ready) {
+    return (
+      <div className="flex min-h-[50vh] items-center justify-center">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-teal-600 border-t-transparent" />
+      </div>
+    );
+  }
 
   if (!booking) {
     return (

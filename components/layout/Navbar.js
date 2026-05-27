@@ -15,7 +15,7 @@ const navLinks = [
 
 export default function Navbar() {
   const { user, logout, loading } = useAuth();
-  const { cartItem } = useCart();
+  const { cartItem, clearCart } = useCart();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -57,7 +57,7 @@ export default function Navbar() {
             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
-            {cartItem && (
+            {user && cartItem && (
               <span className="absolute -right-0.5 -top-0.5 flex h-5 w-5 items-center justify-center rounded-full bg-teal-600 text-[10px] font-bold text-white">
                 1
               </span>
@@ -74,7 +74,10 @@ export default function Navbar() {
                   Tài khoản của tôi
                 </Link>
                 <button
-                  onClick={logout}
+                  onClick={() => {
+                    clearCart();
+                    logout();
+                  }}
                   className="rounded-lg bg-gray-100 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-200"
                 >
                   Đăng xuất
@@ -104,7 +107,7 @@ export default function Navbar() {
             <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
             </svg>
-            {cartItem && (
+            {user && cartItem && (
               <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-teal-600 text-[9px] font-bold text-white">
                 1
               </span>
@@ -146,7 +149,14 @@ export default function Navbar() {
                   <Link href="/account" onClick={() => setMenuOpen(false)} className="rounded-lg px-4 py-3 text-sm font-medium">
                     Tài khoản của tôi
                   </Link>
-                  <button onClick={() => { logout(); setMenuOpen(false); }} className="rounded-lg px-4 py-3 text-left text-sm font-medium">
+                  <button
+                    onClick={() => {
+                      clearCart();
+                      logout();
+                      setMenuOpen(false);
+                    }}
+                    className="rounded-lg px-4 py-3 text-left text-sm font-medium"
+                  >
                     Đăng xuất
                   </button>
                 </>

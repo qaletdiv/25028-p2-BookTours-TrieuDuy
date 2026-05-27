@@ -10,7 +10,10 @@ export default function AuthGuard({ children }) {
 
   useEffect(() => {
     if (!loading && !user) {
-      router.replace("/login?redirect=" + encodeURIComponent(window.location.pathname));
+      router.replace(
+        "/register?redirect=" +
+          encodeURIComponent(window.location.pathname + window.location.search)
+      );
     }
   }, [user, loading, router]);
 

@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import AuthGuard from "@/components/auth/AuthGuard";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { formatDate, formatPrice } from "@/data/tours";
+import { getTourById } from "@/data/tours";
 import {
   generateBookingCode,
   getBookings,
@@ -19,8 +20,9 @@ import Button from "@/components/ui/Button";
 
 function CheckoutForm() {
   const { user } = useAuth();
-  const { cartItem, clearCart, ready } = useCart();
+  const { cartItem, addToCart, clearCart, ready } = useCart();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   const [contact, setContact] = useState({
     fullName: "",
@@ -40,6 +42,14 @@ function CheckoutForm() {
   useEffect(() => {
     if (!ready) return;
     if (!cartItem) {
+      const tourId = searchParams.get("tourId");
+      if (tourId) {
+        const tour = getTourById(tourId);
+        if (tour) {
+          addToCart(tour);
+          return;
+        }
+      }
       router.replace("/tours");
       return;
     }
@@ -50,7 +60,7 @@ function CheckoutForm() {
       address: user.address || "",
     });
     setDepartureDate(cartItem.departureDates[0]);
-  }, [cartItem, user, router, ready]);
+  }, [cartItem, user, router, ready, searchParams, addToCart]);
 
   useEffect(() => {
     const total = adults + children;
@@ -120,7 +130,6 @@ function CheckoutForm() {
     allBookings.unshift(booking);
     saveBookings(allBookings);
     saveLastBooking(booking);
-    clearCart();
 
     router.push("/confirmation");
   };
@@ -321,6 +330,17 @@ function CheckoutForm() {
 
               <Button type="submit" className="mt-6 w-full" size="lg" disabled={loading}>
                 {loading ? "Đang xử lý..." : "Hoàn tất đặt tour"}
+              </Button>
+              <Button
+                type="button"
+                variant="ghost"
+                className="mt-2 w-full"
+                onClick={() => {
+                  clearCart();
+                  router.push("/tours");
+                }}
+              >
+                Xóa tour khỏi giỏ
               </Button>
             </div>
           </div>

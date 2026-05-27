@@ -1,16 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
 import { validateRegister } from "@/lib/validation";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 
-export default function RegisterPage() {
+function RegisterForm() {
   const { register } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const redirect = searchParams.get("redirect") || "";
 
   const [form, setForm] = useState({
     fullName: "",
@@ -37,7 +39,10 @@ export default function RegisterPage() {
 
     if (result.success) {
       setSuccess(true);
-      setTimeout(() => router.push("/login"), 2000);
+      setTimeout(() => {
+        const next = redirect ? `/login?redirect=${encodeURIComponent(redirect)}` : "/login";
+        router.push(next);
+      }, 2000);
     } else {
       setServerError(result.error);
     }
@@ -50,6 +55,11 @@ export default function RegisterPage() {
           <div className="text-4xl">✓</div>
           <h2 className="mt-4 text-xl font-bold text-green-800">Đăng ký thành công!</h2>
           <p className="mt-2 text-green-600">Đang chuyển đến trang đăng nhập...</p>
+        {redirect && (
+          <p className="mt-2 text-xs text-green-700">
+            Sau khi đăng nhập, bạn sẽ được đưa về trang đang thao tác.
+          </p>
+        )}
         </div>
       </div>
     );
@@ -123,5 +133,13 @@ export default function RegisterPage() {
         </form>
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={<div className="py-16 text-center">Đang tải...</div>}>
+      <RegisterForm />
+    </Suspense>
   );
 }

@@ -4,7 +4,7 @@ import { formatPrice } from "@/data/tours";
 
 export default function TourCard({ tour }) {
   return (
-    <article className="group overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
+    <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
       <div className="relative aspect-[4/3] overflow-hidden">
         <TourImage
           src={tour.images[0]}
@@ -20,11 +20,11 @@ export default function TourCard({ tour }) {
           {tour.duration} ngày
         </span>
       </div>
-      <div className="p-5">
+      <div className="flex flex-1 flex-col p-5">
         <p className="text-xs font-medium uppercase tracking-wide text-teal-600">
           {tour.summary}
         </p>
-        <h3 className="mt-1 line-clamp-2 text-lg font-bold text-gray-900 group-hover:text-teal-700">
+        <h3 className="mt-1 min-h-[56px] line-clamp-2 text-lg font-bold text-gray-900 group-hover:text-teal-700">
           {tour.name}
         </h3>
         <div className="mt-3 flex items-center justify-between">
@@ -38,7 +38,7 @@ export default function TourCard({ tour }) {
         </div>
         <Link
           href={`/tours/${tour.id}`}
-          className="mt-4 block w-full rounded-lg bg-teal-600 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-teal-700"
+          className="mt-auto block w-full rounded-lg bg-teal-600 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-teal-700"
         >
           Xem chi tiết
         </Link>
