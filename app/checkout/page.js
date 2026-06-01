@@ -20,7 +20,7 @@ import Button from "@/components/ui/Button";
 
 function CheckoutForm() {
   const { user } = useAuth();
-  const { cartItem, addToCart, clearCart, ready } = useCart();
+  const { cartItems, addToCart, removeFromCart, clearCart, ready } = useCart();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -30,7 +30,7 @@ function CheckoutForm() {
     email: "",
     address: "",
   });
-  const [departureDate, setDepartureDate] = useState("");
+  const [tourDates, setTourDates] = useState({});
   const [adults, setAdults] = useState(1);
   const [children, setChildren] = useState(0);
   const [passengers, setPassengers] = useState([{ fullName: "", phone: "", idNumber: "" }]);
@@ -41,26 +41,35 @@ function CheckoutForm() {
 
   useEffect(() => {
     if (!ready) return;
-    if (!cartItem) {
-      const tourId = searchParams.get("tourId");
-      if (tourId) {
-        const tour = getTourById(tourId);
-        if (tour) {
-          addToCart(tour);
-          return;
-        }
+    const tourId = searchParams.get("tourId");
+    if (tourId) {
+      const tour = getTourById(tourId);
+      if (tour && !cartItems.some((t) => t.id === tour.id)) {
+        addToCart(tour);
+        return;
       }
-      router.replace("/tours");
-      return;
     }
+    if (cartItems.length === 0) {
+      router.replace("/tours");
+    }
+  }, [ready, searchParams, cartItems, addToCart, router]);
+
+  useEffect(() => {
+    if (!ready || cartItems.length === 0) return;
     setContact({
       fullName: user.fullName || "",
       phone: user.phone || "",
       email: user.email || "",
       address: user.address || "",
     });
-    setDepartureDate(cartItem.departureDates[0]);
-  }, [cartItem, user, router, ready, searchParams, addToCart]);
+    setTourDates((prev) => {
+      const next = { ...prev };
+      cartItems.forEach((t) => {
+        if (!next[t.id]) next[t.id] = t.departureDates[0];
+      });
+      return next;
+    });
+  }, [cartItems, user, ready]);
 
   useEffect(() => {
     const total = adults + children;
@@ -73,7 +82,7 @@ function CheckoutForm() {
     });
   }, [adults, children]);
 
-  if (!ready || !cartItem) {
+  if (!ready || cartItems.length === 0) {
     return (
       <div className="flex min-h-[50vh] items-center justify-center">
         <div className="h-8 w-8 animate-spin rounded-full border-4 border-teal-600 border-t-transparent" />
@@ -81,7 +90,8 @@ function CheckoutForm() {
     );
   }
 
-  const totalPrice = adults * cartItem.price + children * cartItem.childPrice;
+  const lineTotal = (tour) => adults * tour.price + children * tour.childPrice;
+  const totalPrice = cartItems.reduce((sum, tour) => sum + lineTotal(tour), 0);
 
   const handlePassengerChange = (index, field, value) => {
     setPassengers((prev) => {
@@ -111,32 +121,41 @@ function CheckoutForm() {
 
     setLoading(true);
 
-    const booking = {
+    const bookings = cartItems.map((tour) => ({
       id: generateBookingCode(),
       userId: user.id,
-      tourId: cartItem.id,
-      tourName: cartItem.name,
-      departureDate,
+      tourId: tour.id,
+      tourName: tour.name,
+      departureDate: tourDates[tour.id],
       adults,
       children,
-      totalPrice,
+      totalPrice: lineTotal(tour),
       paymentMethod,
       contact,
       passengers,
       createdAt: new Date().toISOString(),
-    };
+    }));
 
     const allBookings = getBookings();
-    allBookings.unshift(booking);
+    allBookings.unshift(...bookings);
     saveBookings(allBookings);
-    saveLastBooking(booking);
+    saveLastBooking({
+      bookings,
+      totalPrice,
+      paymentMethod,
+      contact,
+      createdAt: new Date().toISOString(),
+    });
 
     router.push("/confirmation");
   };
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-      <h1 className="mb-8 text-3xl font-bold text-gray-900">Thanh toán</h1>
+      <h1 className="mb-2 text-3xl font-bold text-gray-900">Thanh toán</h1>
+      <p className="mb-8 text-sm text-gray-500">
+        Giỏ hàng có {cartItems.length} tour — bạn có thể tiếp tục thêm tour khác trước khi thanh toán
+      </p>
 
       <form onSubmit={handleSubmit} noValidate>
         <div className="grid gap-8 lg:grid-cols-3">
@@ -174,20 +193,8 @@ function CheckoutForm() {
             </section>
 
             <section className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
-              <h2 className="mb-4 text-lg font-bold">Thông tin hành khách</h2>
-              <div className="grid gap-4 sm:grid-cols-3">
-                {cartItem.departureDates.length > 1 ? (
-                  <Select label="Ngày khởi hành" value={departureDate} onChange={(e) => setDepartureDate(e.target.value)}>
-                    {cartItem.departureDates.map((d) => (
-                      <option key={d} value={d}>{formatDate(d)}</option>
-                    ))}
-                  </Select>
-                ) : (
-                  <div>
-                    <p className="text-sm font-medium text-gray-700">Ngày khởi hành</p>
-                    <p className="mt-2 text-sm text-gray-900">{formatDate(cartItem.departureDates[0])}</p>
-                  </div>
-                )}
+              <h2 className="mb-4 text-lg font-bold">Số lượng khách (áp dụng cho tất cả tour)</h2>
+              <div className="grid gap-4 sm:grid-cols-2">
                 <Input
                   label="Người lớn"
                   type="number"
@@ -305,43 +312,91 @@ function CheckoutForm() {
           </div>
 
           <div>
-            <div className="sticky top-24 rounded-2xl border border-gray-100 bg-white p-6 shadow-lg">
-              <h2 className="text-lg font-bold">Tóm tắt booking</h2>
-              <img src={cartItem.images[0]} alt="" className="mt-4 aspect-video w-full rounded-xl object-cover" />
-              <h3 className="mt-4 font-semibold">{cartItem.name}</h3>
-              <p className="text-sm text-gray-500">{cartItem.summary}</p>
+            <div className="sticky top-24 space-y-4">
+              <div className="rounded-2xl border border-gray-100 bg-white p-6 shadow-lg">
+                <h2 className="text-lg font-bold">Giỏ hàng ({cartItems.length})</h2>
+                <ul className="mt-4 space-y-4">
+                  {cartItems.map((tour) => (
+                    <li key={tour.id} className="border-b border-gray-100 pb-4 last:border-0 last:pb-0">
+                      <div className="flex gap-3">
+                        <img
+                          src={tour.images[0]}
+                          alt=""
+                          className="h-16 w-16 shrink-0 rounded-lg object-cover"
+                        />
+                        <div className="min-w-0 flex-1">
+                          <h3 className="font-semibold text-sm leading-snug">{tour.name}</h3>
+                          {tour.departureDates.length > 1 ? (
+                            <Select
+                              label="Ngày khởi hành"
+                              value={tourDates[tour.id] || tour.departureDates[0]}
+                              onChange={(e) =>
+                                setTourDates({ ...tourDates, [tour.id]: e.target.value })
+                              }
+                              className="mt-2"
+                            >
+                              {tour.departureDates.map((d) => (
+                                <option key={d} value={d}>
+                                  {formatDate(d)}
+                                </option>
+                              ))}
+                            </Select>
+                          ) : (
+                            <p className="mt-1 text-xs text-gray-500">
+                              Khởi hành: {formatDate(tour.departureDates[0])}
+                            </p>
+                          )}
+                          <p className="mt-1 text-sm font-medium text-teal-600">
+                            {formatPrice(lineTotal(tour))}
+                          </p>
+                          <button
+                            type="button"
+                            onClick={() => removeFromCart(tour.id)}
+                            className="mt-1 text-xs text-red-600 hover:underline"
+                          >
+                            Xóa khỏi giỏ
+                          </button>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
 
-              <div className="mt-4 space-y-2 border-t border-gray-100 pt-4 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-500">Người lớn x{adults}</span>
-                  <span>{formatPrice(adults * cartItem.price)}</span>
-                </div>
-                {children > 0 && (
+                <div className="mt-4 space-y-2 border-t border-gray-100 pt-4 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-gray-500">Trẻ em x{children}</span>
-                    <span>{formatPrice(children * cartItem.childPrice)}</span>
+                    <span className="text-gray-500">
+                      Người lớn x{adults} × {cartItems.length} tour
+                    </span>
                   </div>
-                )}
-                <div className="flex justify-between border-t border-gray-100 pt-2 text-lg font-bold">
-                  <span>Tổng cộng</span>
-                  <span className="text-teal-600">{formatPrice(totalPrice)}</span>
+                  <div className="flex justify-between border-t border-gray-100 pt-2 text-lg font-bold">
+                    <span>Tổng cộng</span>
+                    <span className="text-teal-600">{formatPrice(totalPrice)}</span>
+                  </div>
                 </div>
-              </div>
 
-              <Button type="submit" className="mt-6 w-full" size="lg" disabled={loading}>
-                {loading ? "Đang xử lý..." : "Hoàn tất đặt tour"}
-              </Button>
-              <Button
-                type="button"
-                variant="ghost"
-                className="mt-2 w-full"
-                onClick={() => {
-                  clearCart();
-                  router.push("/tours");
-                }}
-              >
-                Xóa tour khỏi giỏ
-              </Button>
+                <Button type="submit" className="mt-6 w-full" size="lg" disabled={loading}>
+                  {loading ? "Đang xử lý..." : `Hoàn tất đặt ${cartItems.length} tour`}
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="mt-2 w-full"
+                  onClick={() => router.push("/tours")}
+                >
+                  Thêm tour khác
+                </Button>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="mt-2 w-full text-red-600"
+                  onClick={() => {
+                    clearCart();
+                    router.push("/tours");
+                  }}
+                >
+                  Xóa toàn bộ giỏ
+                </Button>
+              </div>
             </div>
           </div>
         </div>

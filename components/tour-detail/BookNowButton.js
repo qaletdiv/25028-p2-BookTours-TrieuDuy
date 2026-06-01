@@ -1,6 +1,6 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { formatDate, formatPrice } from "@/data/tours";
@@ -10,12 +10,11 @@ export default function BookNowButton({ tour }) {
   const { user } = useAuth();
   const { addToCart } = useCart();
   const router = useRouter();
-  const pathname = usePathname();
 
   const handleBook = () => {
     if (!user) {
       router.push(
-        `/register?redirect=${encodeURIComponent(
+        `/login?redirect=${encodeURIComponent(
           `/checkout?tourId=${tour.id}`
         )}`
       );

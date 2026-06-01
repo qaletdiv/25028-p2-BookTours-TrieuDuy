@@ -11,7 +11,7 @@ export default function AuthGuard({ children }) {
   useEffect(() => {
     if (!loading && !user) {
       router.replace(
-        "/register?redirect=" +
+        "/login?redirect=" +
           encodeURIComponent(window.location.pathname + window.location.search)
       );
     }
