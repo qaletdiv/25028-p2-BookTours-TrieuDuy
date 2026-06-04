@@ -7,12 +7,8 @@ import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { formatDate, formatPrice } from "@/data/tours";
 import { getTourById } from "@/data/tours";
-import {
-  generateBookingCode,
-  getBookings,
-  saveBookings,
-  saveLastBooking,
-} from "@/lib/storage";
+import { api } from "@/lib/api-client";
+import { generateBookingCode, saveLastBooking } from "@/lib/storage";
 import { validateCheckout } from "@/lib/validation";
 import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
@@ -112,7 +108,7 @@ function CheckoutForm() {
     return `${digits.slice(0, 2)}/${digits.slice(2)}`;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const validationErrors = validateCheckout({ contact, passengers, paymentMethod, card });
@@ -136,18 +132,23 @@ function CheckoutForm() {
       createdAt: new Date().toISOString(),
     }));
 
-    const allBookings = getBookings();
-    allBookings.unshift(...bookings);
-    saveBookings(allBookings);
-    saveLastBooking({
+    const lastBooking = {
       bookings,
       totalPrice,
       paymentMethod,
       contact,
       createdAt: new Date().toISOString(),
-    });
+    };
 
-    router.push("/confirmation");
+    try {
+      await api.createBookings({ bookings, lastBooking });
+      saveLastBooking(lastBooking);
+      router.push("/confirmation");
+    } catch {
+      setErrors({ submit: "Không thể hoàn tất đặt tour. Vui lòng thử lại." });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -374,6 +375,9 @@ function CheckoutForm() {
                   </div>
                 </div>
 
+                {errors.submit && (
+                  <p className="mt-4 text-center text-sm text-red-600">{errors.submit}</p>
+                )}
                 <Button type="submit" className="mt-6 w-full" size="lg" disabled={loading}>
                   {loading ? "Đang xử lý..." : `Hoàn tất đặt ${cartItems.length} tour`}
                 </Button>

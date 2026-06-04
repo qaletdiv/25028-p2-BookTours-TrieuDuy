@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { getSession, getUsers, saveSession, saveUsers } from "@/lib/storage";
+import { api, getApiSessionId, setApiSessionId } from "@/lib/api-client";
+import { getSession, saveSession } from "@/lib/storage";
 
 const AuthContext = createContext(null);
 
@@ -10,62 +11,74 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setUser(getSession());
-    setLoading(false);
+    async function loadSession() {
+      const cached = getSession();
+      if (cached) setUser(cached);
+
+      if (getApiSessionId()) {
+        try {
+          const res = await fetch("/api/auth/session", {
+            headers: { "X-Session-Id": getApiSessionId() },
+          });
+          const data = await res.json();
+          if (data.user) {
+            setUser(data.user);
+            saveSession(data.user);
+          }
+        } catch {
+          /* keep cached session */
+        }
+      }
+
+      setLoading(false);
+    }
+
+    loadSession();
   }, []);
 
-  const register = ({ fullName, email, phone, password }) => {
-    const users = getUsers();
-    if (users.some((u) => u.email === email.toLowerCase())) {
-      return { success: false, error: "Email đã được đăng ký" };
+  const register = async ({ fullName, email, phone, password }) => {
+    try {
+      await api.register({ fullName, email, phone, password });
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message };
     }
-
-    const newUser = {
-      id: Date.now().toString(),
-      fullName: fullName.trim(),
-      email: email.toLowerCase().trim(),
-      phone: phone.trim(),
-      password,
-      address: "",
-    };
-
-    users.push(newUser);
-    saveUsers(users);
-    return { success: true };
   };
 
-  const login = ({ email, password }) => {
-    const users = getUsers();
-    const found = users.find(
-      (u) => u.email === email.toLowerCase().trim() && u.password === password
-    );
-
-    if (!found) {
-      return { success: false, error: "Email hoặc mật khẩu không đúng" };
+  const login = async ({ email, password }) => {
+    try {
+      const data = await api.login({ email, password });
+      setApiSessionId(data.sessionId);
+      setUser(data.user);
+      saveSession(data.user);
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message };
     }
-
-    const { password: _, ...safeUser } = found;
-    setUser(safeUser);
-    saveSession(safeUser);
-    return { success: true };
   };
 
-  const logout = () => {
+  const logout = async () => {
+    try {
+      await api.logout();
+    } catch {
+      /* ignore */
+    }
+    setApiSessionId(null);
     setUser(null);
     saveSession(null);
   };
 
-  const updateProfile = (updates) => {
-    const users = getUsers();
-    const idx = users.findIndex((u) => u.id === user.id);
-    if (idx === -1) return;
+  const updateProfile = async (updates) => {
+    if (!user) return { success: false, error: "Chưa đăng nhập" };
 
-    users[idx] = { ...users[idx], ...updates };
-    saveUsers(users);
-
-    const { password: _, ...safeUser } = users[idx];
-    setUser(safeUser);
-    saveSession(safeUser);
+    try {
+      const data = await api.updateUser(user.id, updates);
+      setUser(data.user);
+      saveSession(data.user);
+      return { success: true };
+    } catch (err) {
+      return { success: false, error: err.message };
+    }
   };
 
   return (

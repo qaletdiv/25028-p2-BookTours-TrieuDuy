@@ -27,7 +27,7 @@ function LoginForm() {
 
     setLoading(true);
     setServerError("");
-    const result = login(form);
+    const result = await login(form);
     setLoading(false);
 
     if (result.success) {

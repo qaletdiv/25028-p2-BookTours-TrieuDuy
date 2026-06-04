@@ -1,7 +1,8 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
-import { getCartItems, saveCartItems } from "@/lib/storage";
+import { api } from "@/lib/api-client";
+import { saveCartItems } from "@/lib/storage";
 
 const CartContext = createContext(null);
 
@@ -10,35 +11,56 @@ export function CartProvider({ children }) {
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
-    setCartItems(getCartItems());
-    setReady(true);
+    api
+      .getCart()
+      .then(({ items }) => {
+        setCartItems(items);
+        saveCartItems(items);
+      })
+      .catch(() => setCartItems([]))
+      .finally(() => setReady(true));
   }, []);
 
-  const addToCart = useCallback((tour) => {
-    setCartItems((prev) => {
-      if (prev.some((t) => t.id === tour.id)) return prev;
-      const next = [...prev, tour];
-      saveCartItems(next);
-      return next;
-    });
+  const syncItems = useCallback((items) => {
+    setCartItems(items);
+    saveCartItems(items);
   }, []);
 
-  const removeFromCart = useCallback((tourId) => {
-    setCartItems((prev) => {
-      const next = prev.filter((t) => t.id !== tourId);
-      if (next.length === prev.length) return prev;
-      saveCartItems(next);
-      return next;
-    });
-  }, []);
+  const addToCart = useCallback(async (tour) => {
+    try {
+      const { items } = await api.addToCart(tour);
+      syncItems(items);
+    } catch {
+      setCartItems((prev) => {
+        if (prev.some((t) => t.id === tour.id)) return prev;
+        const next = [...prev, tour];
+        saveCartItems(next);
+        return next;
+      });
+    }
+  }, [syncItems]);
 
-  const clearCart = useCallback(() => {
-    setCartItems((prev) => {
-      if (prev.length === 0) return prev;
-      saveCartItems([]);
-      return [];
-    });
-  }, []);
+  const removeFromCart = useCallback(async (tourId) => {
+    try {
+      const { items } = await api.removeFromCart(tourId);
+      syncItems(items);
+    } catch {
+      setCartItems((prev) => {
+        const next = prev.filter((t) => t.id !== tourId);
+        saveCartItems(next);
+        return next;
+      });
+    }
+  }, [syncItems]);
+
+  const clearCart = useCallback(async () => {
+    try {
+      const { items } = await api.clearCart();
+      syncItems(items);
+    } catch {
+      syncItems([]);
+    }
+  }, [syncItems]);
 
   const cartCount = cartItems.length;
 

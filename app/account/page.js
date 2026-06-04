@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import AuthGuard from "@/components/auth/AuthGuard";
 import { useAuth } from "@/context/AuthContext";
-import { getBookings } from "@/lib/storage";
+import { api } from "@/lib/api-client";
 import { formatDate, formatPrice } from "@/data/tours";
 
 function AccountContent() {
@@ -11,8 +11,10 @@ function AccountContent() {
   const [bookings, setBookings] = useState([]);
 
   useEffect(() => {
-    const all = getBookings();
-    setBookings(all.filter((b) => b.userId === user.id));
+    api
+      .getBookings(user.id)
+      .then(({ bookings: list }) => setBookings(list))
+      .catch(() => setBookings([]));
   }, [user.id]);
 
   return (

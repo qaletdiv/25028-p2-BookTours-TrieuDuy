@@ -1,0 +1,21 @@
+{
+  "users": [
+    {
+      "id": "1780562014779",
+      "fullName": "Lê Triệu Duy",
+      "email": "email@example.com",
+      "phone": "0901234567",
+      "password": "123456",
+      "address": ""
+    }
+  ],
+  "bookings": [],
+  "contacts": [],
+  "sessions": {
+    "sess_1780562021754_l8hz6ls2": {
+      "userId": "1780562014779",
+      "createdAt": "2026-06-04T08:33:41.756Z"
+    }
+  },
+  "carts": {}
+}

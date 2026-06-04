@@ -1,6 +1,6 @@
 import { Geist } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
+import NavbarShell from "@/components/layout/NavbarShell";
 import Footer from "@/components/layout/Footer";
 import { Providers } from "@/context/Providers";
 
@@ -19,7 +19,7 @@ export default function RootLayout({ children }) {
     <html lang="vi" className={`${geistSans.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
         <Providers>
-          <Navbar />
+          <NavbarShell />
           <main className="flex-1">{children}</main>
           <Footer />
         </Providers>

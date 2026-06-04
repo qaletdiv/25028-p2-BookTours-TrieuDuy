@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
+import { isNavLinkActive } from "@/lib/navActive";
 
 const navLinks = [
   { href: "/", label: "Trang chủ" },
@@ -17,7 +18,22 @@ export default function Navbar() {
   const { user, logout, loading } = useAuth();
   const { cartCount, clearCart } = useCart();
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const linkClass = (link, mobile = false) => {
+    const active = isNavLinkActive(link, pathname, searchParams);
+    if (mobile) {
+      return `rounded-lg px-4 py-3 text-sm font-medium ${
+        active ? "bg-teal-50 text-teal-700" : "text-gray-700 hover:bg-teal-50"
+      }`;
+    }
+    return `rounded-lg px-4 py-2 text-sm font-medium transition ${
+      active
+        ? "bg-teal-50 text-teal-700"
+        : "text-gray-600 hover:bg-gray-50 hover:text-teal-600"
+    }`;
+  };
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-100 bg-white/95 backdrop-blur-md shadow-sm">
@@ -34,15 +50,7 @@ export default function Navbar() {
 
         <nav className="hidden items-center gap-1 md:flex">
           {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={`rounded-lg px-4 py-2 text-sm font-medium transition ${
-                pathname === link.href.split("?")[0]
-                  ? "bg-teal-50 text-teal-700"
-                  : "text-gray-600 hover:bg-gray-50 hover:text-teal-600"
-              }`}
-            >
+            <Link key={link.href} href={link.href} className={linkClass(link)}>
               {link.label}
             </Link>
           ))}
@@ -137,7 +145,7 @@ export default function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setMenuOpen(false)}
-                className="rounded-lg px-4 py-3 text-sm font-medium text-gray-700 hover:bg-teal-50"
+                className={linkClass(link, true)}
               >
                 {link.label}
               </Link>

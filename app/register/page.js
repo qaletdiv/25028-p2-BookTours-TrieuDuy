@@ -26,7 +26,7 @@ function RegisterForm() {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validateRegister(form);
     setErrors(validationErrors);
@@ -34,7 +34,7 @@ function RegisterForm() {
 
     setLoading(true);
     setServerError("");
-    const result = register(form);
+    const result = await register(form);
     setLoading(false);
 
     if (result.success) {

@@ -1,7 +1,38 @@
+"use client";
+
+import { useState } from "react";
+import { api } from "@/lib/api-client";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
 
 export default function ContactPage() {
+  const [form, setForm] = useState({
+    fullName: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess(false);
+
+    try {
+      await api.submitContact(form);
+      setSuccess(true);
+      setForm({ fullName: "", email: "", subject: "", message: "" });
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="mx-auto max-w-4xl px-4 py-10 sm:px-6 lg:px-8">
       <div className="grid gap-10 lg:grid-cols-2">
@@ -36,26 +67,57 @@ export default function ContactPage() {
           </div>
         </div>
 
-        <form className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+        <form
+          onSubmit={handleSubmit}
+          className="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"
+        >
           <h2 className="mb-4 text-lg font-bold">Gửi tin nhắn</h2>
           <div className="space-y-4">
-            <Input label="Họ tên" placeholder="Nguyễn Văn A" />
-            <Input label="Email" type="email" placeholder="email@example.com" />
-            <Input label="Tiêu đề" placeholder="Hỏi về tour..." />
+            <Input
+              label="Họ tên"
+              placeholder="Nguyễn Văn A"
+              value={form.fullName}
+              onChange={(e) => setForm({ ...form, fullName: e.target.value })}
+              required
+            />
+            <Input
+              label="Email"
+              type="email"
+              placeholder="email@example.com"
+              value={form.email}
+              onChange={(e) => setForm({ ...form, email: e.target.value })}
+              required
+            />
+            <Input
+              label="Tiêu đề"
+              placeholder="Hỏi về tour..."
+              value={form.subject}
+              onChange={(e) => setForm({ ...form, subject: e.target.value })}
+            />
             <div>
               <label className="mb-1.5 block text-sm font-medium text-gray-700">Nội dung</label>
               <textarea
                 rows={4}
+                required
+                value={form.message}
+                onChange={(e) => setForm({ ...form, message: e.target.value })}
                 className="w-full rounded-lg border border-gray-200 px-4 py-2.5 text-sm outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20"
                 placeholder="Nội dung tin nhắn..."
               />
             </div>
-            <Button type="button" className="w-full">
-              Gửi liên hệ
+
+            {error && (
+              <div className="rounded-lg bg-red-50 px-4 py-3 text-sm text-red-600">{error}</div>
+            )}
+            {success && (
+              <div className="rounded-lg bg-green-50 px-4 py-3 text-sm text-green-700">
+                Gửi liên hệ thành công! Chúng tôi sẽ phản hồi sớm.
+              </div>
+            )}
+
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Đang gửi..." : "Gửi liên hệ"}
             </Button>
-            <p className="text-center text-xs text-gray-400">
-              (Form mô phỏng — không gửi dữ liệu thật)
-            </p>
           </div>
         </form>
       </div>
