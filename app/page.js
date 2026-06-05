@@ -3,8 +3,7 @@ import SearchFilter from "@/components/home/SearchFilter";
 import PromoPopup from "@/components/home/PromoPopup";
 import TourCard from "@/components/tours/TourCard";
 import { tours } from "@/data/tours";
-import Link from "next/link";
-import Button from "@/components/ui/Button";
+import { buildToursHref } from "@/lib/tourUrl";
 
 const sections = [
   { title: "Tour Hot", featured: "hot", description: "Những tour được yêu thích nhất" },
@@ -31,12 +30,16 @@ export default function HomePage() {
                 <h2 className="text-2xl font-bold text-gray-900 sm:text-3xl">{section.title}</h2>
                 <p className="mt-1 text-gray-500">{section.description}</p>
               </div>
-              <Link
-                href={section.featured === "hot" ? "/tours?featured=hot" : `/tours?category=${section.featured}`}
+              <a
+                href={
+                  section.featured === "hot"
+                    ? buildToursHref({ featured: "hot" })
+                    : buildToursHref({ category: section.featured })
+                }
                 className="hidden text-sm font-semibold text-teal-600 hover:text-teal-700 sm:block"
               >
                 Xem tất cả →
-              </Link>
+              </a>
             </div>
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {sectionTours.map((tour) => (
@@ -55,9 +58,12 @@ export default function HomePage() {
           <p className="mt-2 text-teal-100">
             Hơn 15 tour hấp dẫn đang chờ bạn khám phá
           </p>
-          <Button href="/tours" variant="secondary" size="lg" className="mt-6">
+          <a
+            href="/tours"
+            className="mt-6 inline-flex items-center justify-center gap-2 rounded-lg border border-teal-200 bg-white px-6 py-3 text-base font-semibold text-teal-700 transition hover:bg-teal-50"
+          >
             Khám phá tất cả tour
-          </Button>
+          </a>
         </div>
       </section>
     </>

@@ -1,14 +1,13 @@
-import Link from "next/link";
-import TourImage from "@/components/ui/TourImage";
 import { formatPrice } from "@/data/tours";
 
 export default function TourCard({ tour }) {
   return (
     <article className="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
       <div className="relative aspect-[4/3] overflow-hidden">
-        <TourImage
+        <img
           src={tour.images[0]}
           alt={tour.name}
+          loading="lazy"
           className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
         />
         {tour.featured.includes("hot") && (
@@ -36,12 +35,12 @@ export default function TourCard({ tour }) {
             ★ {tour.rating}
           </div>
         </div>
-        <Link
+        <a
           href={`/tours/${tour.id}`}
           className="mt-auto block w-full rounded-lg bg-teal-600 py-2.5 text-center text-sm font-semibold text-white transition hover:bg-teal-700"
         >
           Xem chi tiết
-        </Link>
+        </a>
       </div>
     </article>
   );

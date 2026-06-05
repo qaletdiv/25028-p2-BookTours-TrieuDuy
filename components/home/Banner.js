@@ -3,16 +3,25 @@
 import { useEffect, useState } from "react";
 import { banners } from "@/data/tours";
 import Button from "@/components/ui/Button";
+import BannerShell from "@/components/home/BannerShell";
+import { useMounted } from "@/hooks/useMounted";
+import { normalizeToursHref } from "@/lib/tourUrl";
 
 export default function Banner() {
+  const mounted = useMounted();
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
+    if (!mounted) return undefined;
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % banners.length);
     }, 5000);
     return () => clearInterval(timer);
-  }, []);
+  }, [mounted]);
+
+  if (!mounted) {
+    return <BannerShell />;
+  }
 
   const banner = banners[current];
 
@@ -38,7 +47,7 @@ export default function Banner() {
           {banner.title}
         </h1>
         <div className="mt-6">
-          <Button href={banner.link} size="lg">
+          <Button href={normalizeToursHref(banner.link)} size="lg">
             {banner.cta}
           </Button>
         </div>

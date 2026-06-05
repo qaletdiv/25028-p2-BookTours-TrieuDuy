@@ -718,16 +718,12 @@ export function getRelatedTours(tour, limit = 4) {
 }
 
 export function formatPrice(price) {
-  return new Intl.NumberFormat("vi-VN", {
-    style: "currency",
-    currency: "VND",
-  }).format(price);
+  const amount = Math.round(Number(price));
+  return `${amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")} ₫`;
 }
 
 export function formatDate(dateStr) {
-  return new Date(dateStr).toLocaleDateString("vi-VN", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
+  const [year, month, day] = String(dateStr).split("-");
+  if (!year || !month || !day) return dateStr;
+  return `${day.padStart(2, "0")}/${month.padStart(2, "0")}/${year}`;
 }

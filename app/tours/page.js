@@ -1,37 +1,28 @@
 "use client";
 
 import { Suspense, useEffect, useMemo, useState } from "react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import TourCard from "@/components/tours/TourCard";
 import TourFilters from "@/components/tours/TourFilters";
 import Pagination from "@/components/tours/Pagination";
 import { tours } from "@/data/tours";
 import { filterTours, paginateTours, sortTours } from "@/lib/tourHelpers";
+import { buildToursHref, getTourFiltersFromSearchParams } from "@/lib/tourUrl";
 
 function ToursContent() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const [sortBy, setSortBy] = useState("default");
   const [page, setPage] = useState(1);
 
-  const initialFilters = useMemo(() => ({
-    destination: searchParams.get("destination") || "",
-    departure: searchParams.get("departure") || "",
-    duration: searchParams.get("duration") || "",
-    category: searchParams.get("category") || "",
-    featured: searchParams.get("featured") || "",
-    type: searchParams.get("type") || "",
-    minPrice: searchParams.get("minPrice") || "",
-    maxPrice: searchParams.get("maxPrice") || "",
-    dateFrom: searchParams.get("dateFrom") || "",
-    dateTo: searchParams.get("dateTo") || "",
-  }), [searchParams]);
-
-  const [filters, setFilters] = useState(initialFilters);
+  const filters = useMemo(
+    () => getTourFiltersFromSearchParams(searchParams),
+    [searchParams]
+  );
 
   useEffect(() => {
-    setFilters(initialFilters);
     setPage(1);
-  }, [initialFilters]);
+  }, [searchParams]);
 
   const filtered = useMemo(() => {
     const result = filterTours(tours, filters);
@@ -41,8 +32,7 @@ function ToursContent() {
   const { items, currentPage, totalPages, totalItems } = paginateTours(filtered, page, 6);
 
   const handleFilterChange = (newFilters) => {
-    setFilters(newFilters);
-    setPage(1);
+    router.replace(buildToursHref(newFilters));
   };
 
   return (

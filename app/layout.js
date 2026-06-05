@@ -16,13 +16,13 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="vi" className={`${geistSans.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col">
+    <html lang="vi" className={`${geistSans.variable} h-full antialiased`} suppressHydrationWarning>
+      <body className="flex min-h-full flex-col" suppressHydrationWarning>
         <Providers>
           <NavbarShell />
           <main className="flex-1">{children}</main>
-          <Footer />
         </Providers>
+        <Footer />
       </body>
     </html>
   );

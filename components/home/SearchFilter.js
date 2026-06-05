@@ -4,8 +4,12 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { destinations, departurePoints, durationRanges } from "@/data/tours";
 import Button from "@/components/ui/Button";
+import SearchFilterShell from "@/components/home/SearchFilterShell";
+import { useMounted } from "@/hooks/useMounted";
+import { buildToursHref } from "@/lib/tourUrl";
 
 export default function SearchFilter({ compact = false }) {
+  const mounted = useMounted();
   const router = useRouter();
   const [destination, setDestination] = useState("");
   const [departure, setDeparture] = useState("");
@@ -15,14 +19,20 @@ export default function SearchFilter({ compact = false }) {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    const params = new URLSearchParams();
-    if (destination) params.set("destination", destination);
-    if (departure) params.set("departure", departure);
-    if (duration) params.set("duration", duration);
-    if (dateFrom) params.set("dateFrom", dateFrom);
-    if (dateTo) params.set("dateTo", dateTo);
-    router.push(`/tours?${params.toString()}`);
+    router.push(
+      buildToursHref({
+        destination,
+        departure,
+        duration,
+        dateFrom,
+        dateTo,
+      })
+    );
   };
+
+  if (!mounted) {
+    return <SearchFilterShell compact={compact} />;
+  }
 
   return (
     <form

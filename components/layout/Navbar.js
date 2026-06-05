@@ -6,11 +6,12 @@ import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useCart } from "@/context/CartContext";
 import { isNavLinkActive } from "@/lib/navActive";
+import { buildToursHref } from "@/lib/tourUrl";
 
 const navLinks = [
   { href: "/", label: "Trang chủ" },
-  { href: "/tours?category=domestic", label: "Tour Trong Nước" },
-  { href: "/tours?category=international", label: "Tour Nước Ngoài" },
+  { href: buildToursHref({ category: "domestic" }), label: "Tour Trong Nước" },
+  { href: buildToursHref({ category: "international" }), label: "Tour Nước Ngoài" },
   { href: "/contact", label: "Liên hệ" },
 ];
 

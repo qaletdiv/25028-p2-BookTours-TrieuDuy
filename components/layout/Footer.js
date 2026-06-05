@@ -1,4 +1,11 @@
-import Link from "next/link";
+import { buildToursHref } from "@/lib/tourUrl";
+
+const footerLinks = [
+  { href: "/", label: "Trang chủ" },
+  { href: buildToursHref({ category: "domestic" }), label: "Tour trong nước" },
+  { href: buildToursHref({ category: "international" }), label: "Tour nước ngoài" },
+  { href: "/contact", label: "Liên hệ" },
+];
 
 export default function Footer() {
   return (
@@ -13,10 +20,13 @@ export default function Footer() {
         <div>
           <h4 className="mb-3 font-semibold text-white">Liên kết</h4>
           <ul className="space-y-2 text-sm">
-            <li><Link href="/" className="hover:text-teal-400">Trang chủ</Link></li>
-            <li><Link href="/tours?category=domestic" className="hover:text-teal-400">Tour trong nước</Link></li>
-            <li><Link href="/tours?category=international" className="hover:text-teal-400">Tour nước ngoài</Link></li>
-            <li><Link href="/contact" className="hover:text-teal-400">Liên hệ</Link></li>
+            {footerLinks.map((link) => (
+              <li key={link.href}>
+                <a href={link.href} className="hover:text-teal-400">
+                  {link.label}
+                </a>
+              </li>
+            ))}
           </ul>
         </div>
         <div>
