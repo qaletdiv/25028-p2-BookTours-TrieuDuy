@@ -1,7 +1,7 @@
-import { promises as fs } from "fs";
-import path from "path";
+const { promises: fs } = require("fs");
+const path = require("path");
 
-const STORE_PATH = path.join(process.cwd(), "data", "app-store.json");
+const STORE_PATH = path.join(__dirname, "data", "app-store.json");
 
 const DEFAULT_STORE = {
   users: [],
@@ -25,39 +25,39 @@ async function writeStore(store) {
   await fs.writeFile(STORE_PATH, JSON.stringify(store, null, 2), "utf-8");
 }
 
-export async function getStore() {
+async function getStore() {
   return readStore();
 }
 
-export async function updateStore(mutator) {
+async function updateStore(mutator) {
   const store = await readStore();
   const next = mutator(store) ?? store;
   await writeStore(next);
   return next;
 }
 
-export function jsonResponse(data, status = 200) {
-  return Response.json(data, { status });
-}
-
-export function errorResponse(message, status = 400) {
-  return jsonResponse({ success: false, error: message }, status);
-}
-
-export function getSessionUser(store, sessionId) {
+function getSessionUser(store, sessionId) {
   if (!sessionId) return null;
   const session = store.sessions[sessionId];
   if (!session) return null;
   const user = store.users.find((u) => u.id === session.userId);
   if (!user) return null;
-  const { password: _, ...safeUser } = user;
+  const { password: _password, ...safeUser } = user;
   return safeUser;
 }
 
-export function createSessionId() {
+function createSessionId() {
   return `sess_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
 }
 
-export function getCartKey(store, sessionId, userId) {
+function getCartKey(store, sessionId, userId) {
   return userId || sessionId || null;
 }
+
+module.exports = {
+  getStore,
+  updateStore,
+  getSessionUser,
+  createSessionId,
+  getCartKey,
+};

@@ -1,6 +1,8 @@
 const SESSION_ID_KEY = "travel_api_session";
 const CLIENT_ID_KEY = "travel_client_id";
 
+const API_BASE_URL = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
+
 export function getApiSessionId() {
   if (typeof window === "undefined") return null;
   return localStorage.getItem(SESSION_ID_KEY);
@@ -37,7 +39,7 @@ async function apiFetch(path, options = {}) {
   const clientId = getClientId();
   if (clientId) headers["X-Client-Id"] = clientId;
 
-  const res = await fetch(path, { ...options, headers });
+  const res = await fetch(`${API_BASE_URL}${path}`, { ...options, headers });
   const data = await res.json().catch(() => ({}));
 
   if (!res.ok) {

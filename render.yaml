@@ -1,0 +1,28 @@
+services:
+  # Backend REST API (Express)
+  - type: web
+    name: travelvn-api
+    runtime: node
+    rootDir: backend
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      # Set to the deployed frontend URL after first deploy,
+      # e.g. https://travelvn-web.onrender.com
+      - key: CORS_ORIGIN
+        sync: false
+
+  # Frontend (Next.js)
+  - type: web
+    name: travelvn-web
+    runtime: node
+    rootDir: frontend
+    plan: free
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      # Set to the deployed backend URL after first deploy,
+      # e.g. https://travelvn-api.onrender.com
+      - key: NEXT_PUBLIC_API_URL
+        sync: false
