@@ -269,5 +269,6 @@ app.post("/api/contacts", async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`TravelVN API running on port ${PORT}`);
+  const storage = process.env.MONGODB_URI ? "MongoDB" : "file (app-store.json)";
+  console.log(`TravelVN API running on port ${PORT} | storage: ${storage}`);
 });

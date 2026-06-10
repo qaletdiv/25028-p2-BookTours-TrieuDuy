@@ -18,6 +18,15 @@ Mặc định chạy ở `http://localhost:4000`.
 |------|-------|----------|
 | `PORT` | Cổng server (Render tự set) | `4000` |
 | `CORS_ORIGIN` | Origin frontend được phép gọi API | `*` |
+| `MONGODB_URI` | Connection string MongoDB. Bỏ trống = lưu file `data/app-store.json` | _(trống)_ |
+| `MONGODB_DB` | Tên database | `travelvn` |
+
+## Lưu trữ dữ liệu
+
+- **Có `MONGODB_URI`** → dữ liệu lưu trong MongoDB (bền vững, không mất khi redeploy).
+- **Không có `MONGODB_URI`** → fallback lưu file JSON (tiện cho dev local).
+
+Toàn bộ store được lưu thành 1 document `_id: "main"` trong collection `appstore`. Lần chạy đầu nếu chưa có document, hệ thống tự seed từ `data/app-store.json`.
 
 ## Endpoints
 
